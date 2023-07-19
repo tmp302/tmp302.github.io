@@ -1,0 +1,224 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Go 文件 | Blogs</title><meta name="author" content="tmp302"><meta name="copyright" content="tmp302"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="常用12func Open(name string) (*File, error)func OpenFile(name string, flag int, perm FileMode)     参数 描述    O_RDONLY 只读模式打开文件   O_WRONLY 只写模式打开文件   O_RDWR 读写模式打开文件   O_APPEND 写操作时将数据附加到文件尾部（追加）   O_CREA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go 文件">
+<meta property="og:url" content="https://tmp302.github.io/2022/05/20/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/%E6%96%87%E4%BB%B6/index.html">
+<meta property="og:site_name" content="Blogs">
+<meta property="og:description" content="常用12func Open(name string) (*File, error)func OpenFile(name string, flag int, perm FileMode)     参数 描述    O_RDONLY 只读模式打开文件   O_WRONLY 只写模式打开文件   O_RDWR 读写模式打开文件   O_APPEND 写操作时将数据附加到文件尾部（追加）   O_CREA">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tmp302.github.io/img/index.jpg">
+<meta property="article:published_time" content="2022-05-19T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-24T02:28:58.721Z">
+<meta property="article:author" content="tmp302">
+<meta property="article:tag" content="Golang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://tmp302.github.io/img/index.jpg"><link rel="shortcut icon" href="/img/touxiang.jpeg"><link rel="canonical" href="https://tmp302.github.io/2022/05/20/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/%E6%96%87%E4%BB%B6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Go 文件',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-05-24 10:28:58'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxiang.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">63</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">25</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">17</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/index.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Blogs"><span class="site-name">Blogs</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Go 文件</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-05-19T16:00:00.000Z" title="发表于 2022-05-20 00:00:00">2022-05-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-24T02:28:58.721Z" title="更新于 2022-05-24 10:28:58">2022-05-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Golang/">Golang</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Go 文件"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="常用"><a href="#常用" class="headerlink" title="常用"></a>常用</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">func Open(name string) (*File, error)<br>func OpenFile(name string, flag int, perm FileMode)<br></code></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>O_RDONLY</td>
+<td>只读模式打开文件</td>
+</tr>
+<tr>
+<td>O_WRONLY</td>
+<td>只写模式打开文件</td>
+</tr>
+<tr>
+<td>O_RDWR</td>
+<td>读写模式打开文件</td>
+</tr>
+<tr>
+<td>O_APPEND</td>
+<td>写操作时将数据附加到文件尾部（追加）</td>
+</tr>
+<tr>
+<td>O_CREATE</td>
+<td>如果不存在将创建一个新文件</td>
+</tr>
+<tr>
+<td>O_EXCL</td>
+<td>和 O_CREATE 配合使用，文件必须不存在，否则返回一个错误</td>
+</tr>
+<tr>
+<td>O_SYNC</td>
+<td>当进行一系列写操作时，每次都要等待上次的 I&#x2F;O 操作完成再进行</td>
+</tr>
+<tr>
+<td>O_TRUNC</td>
+<td>如果可能，在打开时清空文件</td>
+</tr>
+</tbody></table>
+<h1 id="读取"><a href="#读取" class="headerlink" title="读取"></a>读取</h1><h2 id="整个整个文件"><a href="#整个整个文件" class="headerlink" title="整个整个文件"></a>整个整个文件</h2><p>将文件整个读入内存。效率比较高，占用内存也最高</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">func main()&#123;<br>	filePath := &quot;./1.txt&quot;<br>	content,_ := ioutil.ReadFile(filePath)<br><br>	fmt.Println(content)<br>	fmt.Println(string(content))<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="按行读取"><a href="#按行读取" class="headerlink" title="按行读取"></a>按行读取</h2><p>一般用于文件日志文件读取</p>
+<h3 id="读取所有行"><a href="#读取所有行" class="headerlink" title="读取所有行"></a>读取所有行</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">func main()&#123;<br>	filePath := &quot;./1.txt&quot;<br>	f,_ := os.Open(filePath)<br>	defer f.Close()<br><br>	fileScanner := bufio.NewScanner(f)<br><br>	for fileScanner.Scan()&#123;<br>		fmt.Println(fileScanner.Text())<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="读取指定行"><a href="#读取指定行" class="headerlink" title="读取指定行"></a>读取指定行</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">func main()&#123;<br>	filePath := &quot;./1.txt&quot;<br>	f,_ := os.OpenFile(filePath, os.O_RDONLY, 0666)<br>	defer f.Close()<br><br>	stat,_ := f.Stat()<br>	size := stat.Size()<br>	fmt.Println(&quot;file size: &quot;, size)<br><br>	buf := bufio.NewScanner(f)<br>	lineCount := 1<br><br>	for buf.Scan()&#123;<br>		if lineCount == 3&#123;<br>			fmt.Println(buf.Text())<br>		&#125;<br>		lineCount++<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="按字节读取"><a href="#按字节读取" class="headerlink" title="按字节读取"></a>按字节读取</h2><p>读取方式比较灵活，若文件较大，则可读取需要部分</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">func main()&#123;<br>	filePath := &quot;./1.txt&quot;<br>	f,_ := os.Open(filePath)<br>	defer f.Close()<br><br>	chunks := make([]byte, 0)<br>	buf := make([]byte, 1024)<br><br>	for &#123;<br>		// 读取字节<br>		n,_ := f.Read(buf)<br>		fmt.Println(n)<br>		if n == 0 &#123;<br>			break<br>		&#125;<br>		chunks = append(chunks, buf[:n]...)<br>	&#125;<br>	fmt.Println(string(chunks))<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h1 id="写入"><a href="#写入" class="headerlink" title="写入"></a>写入</h1><h2 id="写入整个文件"><a href="#写入整个文件" class="headerlink" title="写入整个文件"></a>写入整个文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">func main()&#123;<br>	filePath := &quot;./1.txt&quot;<br>	content := []byte(&quot;123\n456\n789&quot;)<br><br>	err := ioutil.WriteFile(filePath, content, 0644)<br>	if err != nil &#123;panic(err)&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">func main()&#123;<br>	filePath := &quot;./1.txt&quot;<br>	file,_ := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE, 0666)<br>	defer file.Close()<br><br>	// 写入文件时，使用带缓存的 *Writer<br>	write := bufio.NewWriter(file)<br>	for i:=1; i&lt;=5; i++&#123;<br>		tmpText := &quot;test\n&quot;<br>		write.WriteString(tmpText)<br>	&#125;<br>	// Flush将缓存的文件真正写入到文件中<br>	write.Flush()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="在末尾追加"><a href="#在末尾追加" class="headerlink" title="在末尾追加"></a>在末尾追加</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">func main()&#123;<br>	filePath := &quot;./1.txt&quot;<br>	file,_ := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE, 0666)<br>	defer file.Close()<br><br>	// 写入文件时，使用带缓存的 *Writer<br>	write := bufio.NewWriter(file)<br>	for i:=1; i&lt;=5; i++&#123;<br>		tmpText := &quot;qqq\n&quot;<br>		write.WriteString(tmpText)<br>	&#125;<br>	// Flush将缓存的文件真正写入到文件中<br>	write.Flush()<br>&#125;<br></code></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://tmp302.github.io">tmp302</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://tmp302.github.io/2022/05/20/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/%E6%96%87%E4%BB%B6/">https://tmp302.github.io/2022/05/20/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/%E6%96%87%E4%BB%B6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://tmp302.github.io" target="_blank">Blogs</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Golang/">Golang</a></div><div class="post_share"><div class="social-share" data-image="/img/index.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/05/20/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/viper/" title="Go viper"><img class="cover" src="/img/index.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Go viper</div></div></a></div><div class="next-post pull-right"><a href="/2022/05/03/%E8%AF%AD%E8%A8%80/Java/java/" title="JAVA"><img class="cover" src="/img/index.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">JAVA</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/05/20/%E8%AF%AD%E8%A8%80/Go/Golang/" title="Golang"><img class="cover" src="/img/index.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-20</div><div class="title">Golang</div></div></a></div><div><a href="/2023/06/18/%E8%AF%AD%E8%A8%80/Go/%E5%85%B6%E4%BB%96/Go%20%E5%87%BD%E6%95%B0/" title="Golang 函数"><img class="cover" src="/img/index.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-18</div><div class="title">Golang 函数</div></div></a></div><div><a href="/2022/05/20/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/net_http/" title="Go net&#x2F;http 库"><img class="cover" src="/img/index.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-20</div><div class="title">Go net&#x2F;http 库</div></div></a></div><div><a href="/2022/05/20/%E8%AF%AD%E8%A8%80/Go/%E5%85%B6%E4%BB%96/go%E5%AF%BC%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8C%85/" title="Golang 不同目录导包"><img class="cover" src="/img/index.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-20</div><div class="title">Golang 不同目录导包</div></div></a></div><div><a href="/2022/05/20/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/json/" title="Go Json"><img class="cover" src="/img/index.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-20</div><div class="title">Go Json</div></div></a></div><div><a href="/2022/05/20/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/regexp/" title="Go regexp 库"><img class="cover" src="/img/index.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-20</div><div class="title">Go regexp 库</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxiang.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">tmp302</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">63</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">25</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">17</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tmp302"><i class="fab fa-github"></i><span>Github</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">常用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96"><span class="toc-number">2.</span> <span class="toc-text">读取</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B4%E4%B8%AA%E6%95%B4%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text">整个整个文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E8%A1%8C%E8%AF%BB%E5%8F%96"><span class="toc-number">2.2.</span> <span class="toc-text">按行读取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%89%80%E6%9C%89%E8%A1%8C"><span class="toc-number">2.2.1.</span> <span class="toc-text">读取所有行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E6%8C%87%E5%AE%9A%E8%A1%8C"><span class="toc-number">2.2.2.</span> <span class="toc-text">读取指定行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E5%AD%97%E8%8A%82%E8%AF%BB%E5%8F%96"><span class="toc-number">2.3.</span> <span class="toc-text">按字节读取</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%99%E5%85%A5"><span class="toc-number">3.</span> <span class="toc-text">写入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E6%95%B4%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="toc-number">3.1.</span> <span class="toc-text">写入整个文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E6%9C%AB%E5%B0%BE%E8%BF%BD%E5%8A%A0"><span class="toc-number">3.2.</span> <span class="toc-text">在末尾追加</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/07/17/other/%E6%B5%8B%E8%AF%95/test/" title="test"><img src="/img/index.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="test"/></a><div class="content"><a class="title" href="/2023/07/17/other/%E6%B5%8B%E8%AF%95/test/" title="test">test</a><time datetime="2023-07-16T16:00:00.000Z" title="发表于 2023-07-17 00:00:00">2023-07-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/18/%E8%AF%AD%E8%A8%80/Java/Java%20%E5%87%BD%E6%95%B0/" title="JAVA 函数"><img src="/img/index.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JAVA 函数"/></a><div class="content"><a class="title" href="/2023/06/18/%E8%AF%AD%E8%A8%80/Java/Java%20%E5%87%BD%E6%95%B0/" title="JAVA 函数">JAVA 函数</a><time datetime="2023-06-17T16:00:00.000Z" title="发表于 2023-06-18 00:00:00">2023-06-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/18/%E8%AF%AD%E8%A8%80/PHP/PHP%E5%87%BD%E6%95%B0/" title="PHP 函数"><img src="/img/index.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PHP 函数"/></a><div class="content"><a class="title" href="/2023/06/18/%E8%AF%AD%E8%A8%80/PHP/PHP%E5%87%BD%E6%95%B0/" title="PHP 函数">PHP 函数</a><time datetime="2023-06-17T16:00:00.000Z" title="发表于 2023-06-18 00:00:00">2023-06-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/18/%E8%AF%AD%E8%A8%80/Python/Python%E5%87%BD%E6%95%B0/" title="Python 函数"><img src="/img/index.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 函数"/></a><div class="content"><a class="title" href="/2023/06/18/%E8%AF%AD%E8%A8%80/Python/Python%E5%87%BD%E6%95%B0/" title="Python 函数">Python 函数</a><time datetime="2023-06-17T16:00:00.000Z" title="发表于 2023-06-18 00:00:00">2023-06-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/18/%E8%AF%AD%E8%A8%80/Go/%E5%85%B6%E4%BB%96/Go%20%E5%87%BD%E6%95%B0/" title="Golang 函数"><img src="/img/index.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Golang 函数"/></a><div class="content"><a class="title" href="/2023/06/18/%E8%AF%AD%E8%A8%80/Go/%E5%85%B6%E4%BB%96/Go%20%E5%87%BD%E6%95%B0/" title="Golang 函数">Golang 函数</a><time datetime="2023-06-17T16:00:00.000Z" title="发表于 2023-06-18 00:00:00">2023-06-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By tmp302</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
