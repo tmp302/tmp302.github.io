@@ -1,0 +1,213 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Go yaml | Blogs</title><meta name="author" content="tmp302"><meta name="copyright" content="tmp302"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="常用   方法 用途    yaml.Unmarshal([]byte, interface&amp;#123;&amp;#125;) error 从 YAML 数据解码到 Go 结构体。   yaml.Marshal(interface&amp;#123;&amp;#125;) ([]byte, error) 将 Go 结构体编码为 YAML 数据。   yaml.NewDecoder(io.Reader) 创建一个新的 YA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go yaml">
+<meta property="og:url" content="https://tmp302.github.io/2023/11/05/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/yml/index.html">
+<meta property="og:site_name" content="Blogs">
+<meta property="og:description" content="常用   方法 用途    yaml.Unmarshal([]byte, interface&amp;#123;&amp;#125;) error 从 YAML 数据解码到 Go 结构体。   yaml.Marshal(interface&amp;#123;&amp;#125;) ([]byte, error) 将 Go 结构体编码为 YAML 数据。   yaml.NewDecoder(io.Reader) 创建一个新的 YA">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tmp302.github.io/img/index.jpg">
+<meta property="article:published_time" content="2023-11-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-05T14:35:54.046Z">
+<meta property="article:author" content="tmp302">
+<meta property="article:tag" content="Golang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://tmp302.github.io/img/index.jpg"><link rel="shortcut icon" href="/img/touxiang.jpeg"><link rel="canonical" href="https://tmp302.github.io/2023/11/05/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/yml/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://unpkg.com/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://unpkg.com/flickr-justified-gallery/dist/fjGallery.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Go yaml',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-11-05 22:35:54'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxiang.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/index.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Blogs"><span class="site-name">Blogs</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Go yaml</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-11-04T16:00:00.000Z" title="发表于 2023-11-05 00:00:00">2023-11-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-11-05T14:35:54.046Z" title="更新于 2023-11-05 22:35:54">2023-11-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Golang/">Golang</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Go yaml"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="常用"><a href="#常用" class="headerlink" title="常用"></a>常用</h1><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>yaml.Unmarshal([]byte, interface&#123;&#125;) error</code></td>
+<td>从 YAML 数据解码到 Go 结构体。</td>
+</tr>
+<tr>
+<td><code>yaml.Marshal(interface&#123;&#125;) ([]byte, error)</code></td>
+<td>将 Go 结构体编码为 YAML 数据。</td>
+</tr>
+<tr>
+<td><code>yaml.NewDecoder(io.Reader)</code></td>
+<td>创建一个新的 YAML 解码器，用于逐行解码 YAML 数据流。</td>
+</tr>
+<tr>
+<td><code>yaml.NewEncoder(io.Writer)</code></td>
+<td>创建一个新的 YAML 编码器，用于将 Go 结构体逐行编码为 YAML 数据流。</td>
+</tr>
+<tr>
+<td><code>yaml.UnmarshalStrict([]byte, interface&#123;&#125;) error</code></td>
+<td>与 <code>yaml.Unmarshal</code> 类似，但要求 YAML 数据严格遵循结构体定义，防止未知字段。</td>
+</tr>
+<tr>
+<td><code>yaml.UnmarshalKey([]byte, interface&#123;&#125;, string)</code></td>
+<td>从 YAML 数据中提取指定字段的值，通常用于检索嵌套结构的值。</td>
+</tr>
+<tr>
+<td><code>yaml.UnmarshalFromFile(string, interface&#123;&#125;) error</code></td>
+<td>从文件中读取 YAML 数据并解码到 Go 结构体。</td>
+</tr>
+</tbody></table>
+<h2 id="1"><a href="#1" class="headerlink" title="1"></a>1</h2><p><code>test.yml</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">baseConfig:<br>  - mysql:<br>      url: 127.0.0.1<br>      username: root<br>      password: 123456<br>      port: 3306<br><br>  - redis:<br>      host: 127.0.0.1<br>      port: 6379<br></code></pre></td></tr></table></figure>
+
+<p><code>main.go</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">package main<br><br>import (<br>	&quot;fmt&quot;<br>	&quot;gopkg.in/yaml.v3&quot;<br>	&quot;os&quot;<br>)<br><br>// Config 结构用于表示 YAML 配置文件的结构<br>type Config struct &#123;<br>	// BaseConfig 是一个切片，用于表示 YAML 配置文件中的 &quot;baseConfig&quot; 部分<br>	BaseConfig []struct &#123;<br>		// Mysql 结构体表示 &quot;baseConfig&quot; 中的 &quot;mysql&quot; 部分<br>		Mysql struct &#123;<br>			URL      string `yaml:&quot;url&quot;`      // URL 是 MySQL 服务器的连接地址，对应 YAML 文件中的 &quot;url&quot; 字段<br>			Username string `yaml:&quot;username&quot;` // Username 是 MySQL 用户名，对应 YAML 文件中的 &quot;username&quot; 字段<br>			Password string `yaml:&quot;password&quot;` // Password 是 MySQL 密码，对应 YAML 文件中的 &quot;password&quot; 字段<br>			Port     int    `yaml:&quot;port&quot;`     // Port 是 MySQL 服务器的端口，对应 YAML 文件中的 &quot;port&quot; 字段<br>		&#125; `yaml:&quot;mysql&quot;` // 使用 &quot;mysql&quot; 标签指定 YAML 字段名为 &quot;mysql&quot;<br><br>		// Redis 结构体表示 &quot;baseConfig&quot; 中的 &quot;redis&quot; 部分<br>		Redis struct &#123;<br>			Host string `yaml:&quot;host&quot;` // Host 是 Redis 服务器的主机地址，对应 YAML 文件中的 &quot;host&quot; 字段<br>			Port int    `yaml:&quot;port&quot;` // Port 是 Redis 服务器的端口，对应 YAML 文件中的 &quot;port&quot; 字段<br>		&#125; `yaml:&quot;redis&quot;` // 使用 &quot;redis&quot; 标签指定 YAML 字段名为 &quot;redis&quot;<br>	&#125; `yaml:&quot;baseConfig&quot;` // 使用 &quot;baseConfig&quot; 标签指定 YAML 字段名为 &quot;baseConfig&quot;<br>&#125;<br><br>func main() &#123;<br>	// 读取 YAML 配置文件<br>	yamlFile, err := os.ReadFile(&quot;test.yml&quot;)<br>	if err != nil &#123;<br>		fmt.Printf(&quot;无法读取配置文件: %v\n&quot;, err)<br>		return<br>	&#125;<br><br>	// 解析 YAML 数据到 Config 结构<br>	var config Config<br>	err = yaml.Unmarshal(yamlFile, &amp;config)<br>	if err != nil &#123;<br>		fmt.Printf(&quot;无法解析 YAML 数据: %v\n&quot;, err)<br>		return<br>	&#125;<br><br>	// 输出配置信息<br>	for _, item := range config.BaseConfig &#123;<br>		fmt.Printf(&quot;MySQL配置:\n&quot;)<br>		fmt.Printf(&quot;URL: %s\n&quot;, item.Mysql.URL)<br>		fmt.Printf(&quot;Username: %s\n&quot;, item.Mysql.Username)<br>		fmt.Printf(&quot;Password: %s\n&quot;, item.Mysql.Password)<br>		fmt.Printf(&quot;Port: %d\n&quot;, item.Mysql.Port)<br><br>		fmt.Printf(&quot;\nRedis配置:\n&quot;)<br>		fmt.Printf(&quot;Host: %s\n&quot;, item.Redis.Host)<br>		fmt.Printf(&quot;Port: %d\n&quot;, item.Redis.Port)<br>	&#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="2"><a href="#2" class="headerlink" title="2"></a>2</h2><p><code>test.yml</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">rules:<br>  - rule:<br>      - status: true<br>        name: qqq<br>        pass: qqq<br>      - status: true<br>        name: www<br>        pass: www<br>      - status: true<br>        name: eee<br>        pass: eee<br>      - status: true<br>        name: rrr<br>        pass: rrr<br>    type: Test<br></code></pre></td></tr></table></figure>
+
+<p><code>main.go</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">package main<br><br>import (<br>	&quot;fmt&quot;<br>	&quot;gopkg.in/yaml.v3&quot;<br>	&quot;os&quot;<br>)<br><br>// Rule 结构体表示一个规则的属性，用于映射 YAML 配置中的一个规则。<br>type Rule struct &#123;<br>	Name   string `yaml:&quot;name&quot;`   // Name 对应 YAML 文件中的 &quot;name&quot; 字段<br>	Status string `yaml:&quot;status&quot;` // Status 对应 YAML 文件中的 &quot;status&quot; 字段<br>	Pass   string `yaml:&quot;pass&quot;`   // Pass 对应 YAML 文件中的 &quot;pass&quot; 字段<br>&#125;<br><br>// Config 结构体表示整个配置文件<br>type Config struct &#123;<br>	Rules []struct &#123;<br>		Rule []Rule `yaml:&quot;rule&quot;` // Rule 对应 YAML 文件中的 &quot;rule&quot; 字段，是 Rule 结构体的切片<br>		Type string `yaml:&quot;type&quot;` // Type 对应 YAML 文件中的 &quot;type&quot; 字段<br>	&#125;<br>&#125;<br><br>func main() &#123;<br>	// 读取 YAML 配置文件<br>	configFile, err := os.ReadFile(&quot;test.yml&quot;) // 读取配置文件的内容<br>	if err != nil &#123;<br>		fmt.Printf(&quot;无法读取配置文件: %v\n&quot;, err)<br>		return<br>	&#125;<br><br>	var config Config<br><br>	_ = yaml.Unmarshal(configFile, &amp;config) // 解析 YAML 数据到 Config 结构体<br><br>	// 遍历配置文件中的规则<br>	for _, i := range config.Rules &#123;<br>		fmt.Println(&quot;Type: &quot;, i.Type) // 输出规则的 Type 字段<br>		for _, j := range i.Rule &#123;<br>			fmt.Println(&quot;\tName: &quot;, j.Name)       // 输出规则的 Name 字段<br>			fmt.Println(&quot;\t\tStatus: &quot;, j.Status) // 输出规则的 Status 字段<br>			fmt.Println(&quot;\t\tPass: &quot;, j.Pass)    // 输出规则的 Pass 字段<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://tmp302.github.io">tmp302</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://tmp302.github.io/2023/11/05/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/yml/">https://tmp302.github.io/2023/11/05/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/yml/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://tmp302.github.io" target="_blank">Blogs</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Golang/">Golang</a></div><div class="post_share"><div class="social-share" data-image="/img/index.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/11/05/%E8%AF%AD%E8%A8%80/Java/HTTP/http/" title="JAVA Http"><img class="cover" src="/img/index.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">JAVA Http</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/05/20/%E8%AF%AD%E8%A8%80/Go/Golang/" title="Golang"><img class="cover" src="/img/index.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-20</div><div class="title">Golang</div></div></a></div><div><a href="/2023/06/18/%E8%AF%AD%E8%A8%80/Go/%E5%85%B6%E4%BB%96/Go%20%E5%87%BD%E6%95%B0/" title="Golang 函数"><img class="cover" src="/img/index.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-18</div><div class="title">Golang 函数</div></div></a></div><div><a href="/2022/05/20/%E8%AF%AD%E8%A8%80/Go/%E5%85%B6%E4%BB%96/go%E5%AF%BC%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8C%85/" title="Golang 不同目录导包"><img class="cover" src="/img/index.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-20</div><div class="title">Golang 不同目录导包</div></div></a></div><div><a href="/2022/05/20/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/net_http/" title="Go net&#x2F;http 库"><img class="cover" src="/img/index.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-20</div><div class="title">Go net&#x2F;http 库</div></div></a></div><div><a href="/2022/05/20/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/regexp/" title="Go regexp 库"><img class="cover" src="/img/index.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-20</div><div class="title">Go regexp 库</div></div></a></div><div><a href="/2022/05/20/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/strconv/" title="Go strconv"><img class="cover" src="/img/index.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-20</div><div class="title">Go strconv</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/touxiang.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">tmp302</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">16</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tmp302"><i class="fab fa-github"></i><span>Github</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">常用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1"><span class="toc-number">1.1.</span> <span class="toc-text">1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2"><span class="toc-number">1.2.</span> <span class="toc-text">2</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/11/05/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/yml/" title="Go yaml"><img src="/img/index.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Go yaml"/></a><div class="content"><a class="title" href="/2023/11/05/%E8%AF%AD%E8%A8%80/Go/%E5%BA%93/yml/" title="Go yaml">Go yaml</a><time datetime="2023-11-04T16:00:00.000Z" title="发表于 2023-11-05 00:00:00">2023-11-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/05/%E8%AF%AD%E8%A8%80/Java/HTTP/http/" title="JAVA Http"><img src="/img/index.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JAVA Http"/></a><div class="content"><a class="title" href="/2023/11/05/%E8%AF%AD%E8%A8%80/Java/HTTP/http/" title="JAVA Http">JAVA Http</a><time datetime="2023-11-04T16:00:00.000Z" title="发表于 2023-11-05 00:00:00">2023-11-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/18/%E8%AF%AD%E8%A8%80/Python/Python%E5%87%BD%E6%95%B0/" title="Python 函数"><img src="/img/index.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python 函数"/></a><div class="content"><a class="title" href="/2023/06/18/%E8%AF%AD%E8%A8%80/Python/Python%E5%87%BD%E6%95%B0/" title="Python 函数">Python 函数</a><time datetime="2023-06-17T16:00:00.000Z" title="发表于 2023-06-18 00:00:00">2023-06-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/18/%E8%AF%AD%E8%A8%80/PHP/PHP%E5%87%BD%E6%95%B0/" title="PHP 函数"><img src="/img/index.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PHP 函数"/></a><div class="content"><a class="title" href="/2023/06/18/%E8%AF%AD%E8%A8%80/PHP/PHP%E5%87%BD%E6%95%B0/" title="PHP 函数">PHP 函数</a><time datetime="2023-06-17T16:00:00.000Z" title="发表于 2023-06-18 00:00:00">2023-06-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/18/%E8%AF%AD%E8%A8%80/Java/Java%20%E5%87%BD%E6%95%B0/" title="JAVA 函数"><img src="/img/index.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JAVA 函数"/></a><div class="content"><a class="title" href="/2023/06/18/%E8%AF%AD%E8%A8%80/Java/Java%20%E5%87%BD%E6%95%B0/" title="JAVA 函数">JAVA 函数</a><time datetime="2023-06-17T16:00:00.000Z" title="发表于 2023-06-18 00:00:00">2023-06-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By tmp302</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://unpkg.com/@fancyapps/ui/dist/fancybox/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
